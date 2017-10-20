@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {Route, Link} from "react-router-dom"
-import {  sendMsg, listenUp, listenForUsers } from './api'
+import Picture from "./components/Picture"
+import {  sendMsg, listenUp, listenForUsers, listenForRoundStart, pictureManager } from './api'
 // subscribeToTimer,
 class App extends Component {
   // constructor(props) {
@@ -16,7 +17,8 @@ class App extends Component {
     msg: "",
     allMsg: [],
     allPlayers: [],
-    ourId: ""
+    ourId: "",
+    currentImage: ""
   };
 
   componentDidMount(){
@@ -33,6 +35,12 @@ class App extends Component {
 
     sendMsg(this.state.msg)
   }
+  roundStart = (message) =>{
+    this.setState({
+      judge: message.judge
+    },() => console.log(this.state))
+
+  }
 
   assignUsers = (allUsers) =>{
     this.setState({
@@ -40,11 +48,18 @@ class App extends Component {
     }, () => console.log(this.state.allUsers))
   }
 
+  assignImage = (url) => {
+    this.setState({
+      currentImage: url
+    })
+  }
+
   componentDidMount(){
     let self = this
     // let allMessages = self.state.allMsg
+    pictureManager(this.assignImage)
     listenForUsers(this.assignUsers)
-
+    listenForRoundStart(this.roundStart)
     listenUp((msg) => {
       console.log("hi" + msg.body)
       console.log(msg)
@@ -72,6 +87,7 @@ class App extends Component {
       <div className="App">
 
         <input type="text" onChange={this.changeHandler} value={this.state.msg} onClick={this.clearText}></input><button onClick={this.clickHandler}>Send</button>
+        <Picture currentImage={this.state.currentImage}/>
         <ul>
           {this.displayMsg()}
         </ul>

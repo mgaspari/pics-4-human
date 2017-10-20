@@ -23,5 +23,14 @@ function sendMsg(msg){
   socket.emit('messageTrans', msg)
 }
 
+function listenForRoundStart(cb){
+  socket.on('round-start', response => cb(response))
+}
 
-export {  sendMsg, listenUp, listenForUsers  };
+function pictureManager(cb){
+  console.log("hiiiiii")
+  socket.emit('getPicture', "Please")
+  socket.on('sendPicture', imgUrl => cb(imgUrl))
+}
+
+export {  sendMsg, listenUp, listenForUsers, listenForRoundStart, pictureManager  };
