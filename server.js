@@ -3,6 +3,8 @@ const io = require('socket.io')();
 //Here the self is socket, the client is client
 var allUsers = []
 var allPictures = []
+var allComments = []
+var i = 0
 const fetch = require("node-fetch")
 
 io.on('connection', (client) => {
@@ -16,7 +18,7 @@ io.on('connection', (client) => {
       })
     })
     io.emit('round-start', {
-      judge: allUsers[0]
+      judge: allUsers[i]
     })
   }
 

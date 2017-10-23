@@ -21,9 +21,6 @@ class App extends Component {
     currentImage: ""
   };
 
-  componentDidMount(){
-
-  }
 
   changeHandler = (event) => {
     this.setState({
@@ -31,8 +28,8 @@ class App extends Component {
     })
   }
 
-  clickHandler = () => {
-
+  clickHandler = (e) => {
+    e.preventDefault()
     sendMsg(this.state.msg)
   }
   roundStart = (message) =>{
