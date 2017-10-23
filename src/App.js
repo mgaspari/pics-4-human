@@ -4,6 +4,7 @@ import './App.css';
 import {Route, Link} from "react-router-dom"
 import Picture from "./components/Picture"
 import {  sendMsg, listenUp, listenForUsers, listenForRoundStart, pictureManager } from './api'
+import ImageHandler from './components/ImageHandler'
 // subscribeToTimer,
 class App extends Component {
   // constructor(props) {
@@ -73,10 +74,11 @@ class App extends Component {
     })
   }
 
-  clearText = () => {
-    this.setState({
-      msg: ""
-    })
+  clearText = (event) => {
+    event.target.select()
+    // this.setState({
+    //   msg: ""
+    // })
   }
 
   render() {
@@ -84,7 +86,8 @@ class App extends Component {
       <div className="App">
 
         <input type="text" onChange={this.changeHandler} value={this.state.msg} onClick={this.clearText}></input><button onClick={this.clickHandler}>Send</button>
-        <Picture currentImage={this.state.currentImage}/>
+        {/* <Picture currentImage={this.state.currentImage}/> */}
+        <ImageHandler />
         <ul>
           {this.displayMsg()}
         </ul>
