@@ -18,19 +18,37 @@ function listenForUsers(cb){
 function listenUp(cb){
   socket.on('messages-recieved', message => cb(message) )
 }
+function assignMyId(cb){
+  socket.on('assign-id', id => cb(id))
+}
 
 function sendMsg(msg){
   socket.emit('messageTrans', msg)
+}
+
+function awardPoint(winnerId){
+socket.emit('award-point', winnerId)
 }
 
 function listenForRoundStart(cb){
   socket.on('round-start', response => cb(response))
 }
 
+function listenForPointUpdate(cb){
+  socket.on('update-points', roundPoints => cb(roundPoints))
+}
+
+function initRoundEnd(){
+  socket.emit('round-end', "End Round")
+}
+
 function pictureManager(cb){
-  console.log("hiiiiii")
   socket.emit('getPicture', "Please")
   socket.on('sendPicture', imgUrl => cb(imgUrl))
 }
 
-export {  sendMsg, listenUp, listenForUsers, listenForRoundStart, pictureManager  };
+function listenForPicUpdate(cb){
+  socket.on('newPicture', imgUrl => cb(imgUrl))
+}
+
+export {  sendMsg, listenUp, listenForUsers, listenForRoundStart, initRoundEnd, pictureManager, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId };

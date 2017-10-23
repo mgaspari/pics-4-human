@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import {Route, Link} from "react-router-dom"
 import Picture from "./components/Picture"
-import {  sendMsg, listenUp, listenForUsers, listenForRoundStart, pictureManager } from './api'
+import {  sendMsg, listenUp, listenForUsers, listenForRoundStart, pictureManager, initRoundEnd, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId} from './api'
 import ImageHandler from './components/ImageHandler'
 // subscribeToTimer,
 class App extends Component {
@@ -17,9 +17,8 @@ class App extends Component {
   state = {
     msg: "",
     allMsg: [],
-    allPlayers: [],
-    ourId: "",
-    currentImage: ""
+    currentImage: "",
+    currentPoints: {}
   };
 
 
@@ -30,14 +29,25 @@ class App extends Component {
   }
 
   clickHandler = (e) => {
-    e.preventDefault()
     sendMsg(this.state.msg)
   }
   roundStart = (message) =>{
     this.setState({
       judge: message.judge
-    },() => console.log(this.state))
+    })
 
+  }
+
+  roundEnd = () =>{
+    this.setState({
+      allMsg: []
+  })
+}
+
+  updatePoints = (currentPoints) =>{
+    this.setState({
+      currentPoints: currentPoints
+    }, () => console.log(this.state.currentPoints))
   }
 
   assignUsers = (allUsers) =>{
@@ -48,7 +58,14 @@ class App extends Component {
 
   assignImage = (url) => {
     this.setState({
-      currentImage: url
+      currentImage: url,
+      allMsg: []
+    })
+  }
+
+  assignId = (id) => {
+    this.setState({
+      myId: id
     })
   }
 
@@ -56,29 +73,29 @@ class App extends Component {
     let self = this
     // let allMessages = self.state.allMsg
     pictureManager(this.assignImage)
+    listenForPicUpdate(this.assignImage)
     listenForUsers(this.assignUsers)
     listenForRoundStart(this.roundStart)
+    listenForPointUpdate(this.updatePoints)
+    assignMyId(this.assignId)
     listenUp((msg) => {
-      console.log("hi" + msg.body)
-      console.log(msg)
       self.setState({
-        allMsg: [...self.state.allMsg, msg.body],
+        allMsg: [...self.state.allMsg, [msg.body,msg.from]],
         ourId: msg.from
-      })
+      }, () => {console.log(self.state.allMsg)})
     })
   }
 
   displayMsg = () => {
     return this.state.allMsg.map((message, index) =>{
-    return  <li key={index}>{message}</li>
+    return  <li key={index}>{message[0]}</li>
     })
   }
 
   clearText = (event) => {
-    event.target.select()
-    // this.setState({
-    //   msg: ""
-    // })
+    this.setState({
+      msg: ""
+    })
   }
 
   render() {
@@ -86,11 +103,12 @@ class App extends Component {
       <div className="App">
 
         <input type="text" onChange={this.changeHandler} value={this.state.msg} onClick={this.clearText}></input><button onClick={this.clickHandler}>Send</button>
-        {/* <Picture currentImage={this.state.currentImage}/> */}
-        <ImageHandler />
+         <Picture currentImage={this.state.currentImage}/>
+        // <ImageHandler />
         <ul>
           {this.displayMsg()}
         </ul>
+        <button onClick={initRoundEnd}>End Round</button>
       </div>
     );
   }
