@@ -45,7 +45,7 @@ class App extends Component {
   })
 }
   announceWinner = (winnerObject) =>{
-    alert("WE DID IT")
+    console.log("hi")
   }
 
   updatePoints = (currentPoints) =>{

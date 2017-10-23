@@ -69,7 +69,7 @@ io.on('connection', (client) => {
         }
       })
       io.emit('announce-winner', winComment)
-      // awardPoint(winComment[1])
+      awardPoint(winComment[1])
     })
 
     client.on('round-end',() => {
