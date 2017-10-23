@@ -27,6 +27,7 @@ function sendMsg(msg){
 }
 
 function awardPoint(winnerId){
+  
 socket.emit('award-point', winnerId)
 }
 
@@ -47,8 +48,12 @@ function pictureManager(cb){
   socket.on('sendPicture', imgUrl => cb(imgUrl))
 }
 
+function listenForRoundWinner(cb){
+  socket.on('announce-winner', winnerObject => cb(winnerObject))
+}
+
 function listenForPicUpdate(cb){
   socket.on('newPicture', imgUrl => cb(imgUrl))
 }
 
-export {  sendMsg, listenUp, listenForUsers, listenForRoundStart, initRoundEnd, pictureManager, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId };
+export {  sendMsg, listenUp, listenForUsers, listenForRoundStart, listenForRoundWinner, initRoundEnd, pictureManager, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId };

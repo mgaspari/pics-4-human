@@ -39,6 +39,9 @@ io.on('connection', (client) => {
       allPictures.push(json.data.image_url)
       io.emit('newPicture', json.data.image_url)
     })
+    if (i >= 4){
+      i = 0
+    }
     if(i<allUsers.length){
         i++
         io.emit('round-start', {
@@ -59,7 +62,14 @@ io.on('connection', (client) => {
     }
 
     client.on('award-point', (winnerId) =>{
-      awardPoint(winnerId)
+      let winComment = ""
+      roundComments.forEach((winnerArray) => {
+        if (winnerArray[1] === winnerId){
+          winComment = winnerArray
+        }
+      })
+      io.emit('announce-winner', winComment)
+      // awardPoint(winComment[1])
     })
 
     client.on('round-end',() => {
@@ -75,7 +85,7 @@ io.on('connection', (client) => {
   // });
   // socket.emit( 'greetings', 'Hello from the server!', socket.id );
   client.on('messageTrans', (body) => {
-    roundComments.push(body)
+    roundComments.push([body, client.id])
     io.emit('messages-recieved', {
       body,
       from: client.id

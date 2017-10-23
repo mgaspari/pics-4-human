@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import {Route, Link} from "react-router-dom"
 import Picture from "./components/Picture"
-import {  sendMsg, listenUp, listenForUsers, listenForRoundStart, pictureManager, initRoundEnd, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId} from './api'
+import {  sendMsg, listenUp, listenForUsers, listenForRoundStart,listenForRoundWinner, pictureManager, initRoundEnd, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId} from './api'
 import ImageHandler from './components/ImageHandler'
 // subscribeToTimer,
 class App extends Component {
@@ -18,7 +18,8 @@ class App extends Component {
     msg: "",
     allMsg: [],
     currentImage: "",
-    currentPoints: {}
+    currentPoints: {},
+    judge: null
   };
 
 
@@ -43,6 +44,9 @@ class App extends Component {
       allMsg: []
   })
 }
+  announceWinner = (winnerObject) =>{
+    alert("WE DID IT")
+  }
 
   updatePoints = (currentPoints) =>{
     this.setState({
@@ -76,19 +80,23 @@ class App extends Component {
     listenForPicUpdate(this.assignImage)
     listenForUsers(this.assignUsers)
     listenForRoundStart(this.roundStart)
+    listenForRoundWinner(this.announceWinner)
     listenForPointUpdate(this.updatePoints)
     assignMyId(this.assignId)
     listenUp((msg) => {
       self.setState({
-        allMsg: [...self.state.allMsg, [msg.body,msg.from]],
-        ourId: msg.from
+        allMsg: [...self.state.allMsg, [msg.body,msg.from]]
       }, () => {console.log(self.state.allMsg)})
     })
   }
 
+  handleWinner = (event) => {
+    awardPoint(this.state.myId)
+  }
+
   displayMsg = () => {
     return this.state.allMsg.map((message, index) =>{
-    return  <li key={index}>{message[0]}</li>
+    return  <li key={index} onClick={this.handleWinner}>{message[0]}</li>
     })
   }
 
@@ -108,7 +116,7 @@ class App extends Component {
         <ul>
           {this.displayMsg()}
         </ul>
-        <button onClick={initRoundEnd}>End Round</button>
+        <button onClick={initRoundEnd}>Next Round</button>
       </div>
     );
   }
