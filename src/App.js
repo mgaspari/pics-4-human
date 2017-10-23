@@ -6,6 +6,8 @@ import Picture from "./components/Picture"
 import {  sendMsg, listenUp, listenForUsers, listenForRoundStart, pictureManager } from './api'
 import ImageHandler from './components/ImageHandler'
 // subscribeToTimer,
+import ContestantController from "./components/ContestantController"
+import JudgeController from "./components/JudgeController"
 class App extends Component {
   // constructor(props) {
   //   super(props);
@@ -19,27 +21,32 @@ class App extends Component {
     allMsg: [],
     allPlayers: [],
     ourId: "",
-    currentImage: ""
+    currentImage: "",
+    judge: false,
+    winner: null
   };
-
-  componentDidMount(){
-
-  }
-
-  changeHandler = (event) => {
+  commentChangeHandler = (event) => {
     this.setState({
       msg: event.target.value
     })
   }
 
-  clickHandler = () => {
-
+  sendCommentHandler = () => {
     sendMsg(this.state.msg)
   }
+
+  checkJudge = () => {
+    if(this.state.judgeId === this.state.ourId){
+      this.setState({
+        judge: true
+      })
+    }
+  }
+
   roundStart = (message) =>{
     this.setState({
-      judge: message.judge
-    },() => console.log(this.state))
+      judgeId: message.judge
+    }, this.checkJudge())
 
   }
 
@@ -77,20 +84,22 @@ class App extends Component {
     })
   }
 
-  clearText = (event) => {
-    event.target.select()
-    // this.setState({
-    //   msg: ""
-    // })
+  setWinner = (event) => {
+    console.log(event)
+  }
+
+  nextGameHandler = () => {
+    console.log("We need to start the next round")
   }
 
   render() {
     return (
       <div className="App">
 
-        <input type="text" onChange={this.changeHandler} value={this.state.msg} onClick={this.clearText}></input><button onClick={this.clickHandler}>Send</button>
+        {/* <input type="text" onChange={this.commentChangeHandler} value={this.state.msg}></input><button onClick={this.sendCommentHandler}>Send</button> */}
         {/* <Picture currentImage={this.state.currentImage}/> */}
         <ImageHandler />
+        {this.state.judge ? (<JudgeController judge={this.state.judge} allMsg={this.state.allMsg} winner={this.state.winner} setWinner={this.setWinner} nextGameHandler={this.nextGameHandler}  />) : (<ContestantController commentChangeHandler={this.commentChangeHandler} msg={this.state.msg} sendCommentHandler={this.sendCommentHandler} judge={this.state.judge} allMsg={this.state.allMsg} winner={this.state.winner} setWinner={this.setWinner}/>)}
         <ul>
           {this.displayMsg()}
         </ul>

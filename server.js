@@ -10,7 +10,7 @@ io.on('connection', (client) => {
 
   function roundStart(){
     client.on("getPicture", message => {
-      fetch('http://api.giphy.com/v1/gifs/random?api_key=').then(res => res.json()).then(json => {
+      fetch('http://api.giphy.com/v1/gifs/random?api_key=9FlwegMOhb9Y8x0ewifH5vuUM5HHe1cT').then(res => res.json()).then(json => {
         allPictures.push(json)
         io.emit('sendPicture', json.data.image_url)
       })
