@@ -5,6 +5,9 @@ import {Route, Link} from "react-router-dom"
 import Picture from "./components/Picture"
 import {  sendMsg, listenUp, listenForUsers, listenForRoundStart,listenForRoundWinner, pictureManager, initRoundEnd, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId} from './api'
 import ImageHandler from './components/ImageHandler'
+import Scoreboard from './components/Scoreboard'
+import ContestantPanel from './components/ContestantPanel'
+import JudgePanel from './components/JudgePanel'
 // subscribeToTimer,
 class App extends Component {
   // constructor(props) {
@@ -96,7 +99,11 @@ class App extends Component {
 
   displayMsg = () => {
     return this.state.allMsg.map((message, index) =>{
-    return  <li key={index} onClick={this.handleWinner}>{message[0]}</li>
+      return (<div role="listitem" key={index} class="item" onClick={this.handleWinner}>
+    <i aria-hidden="true" class="comment outline icon"></i>
+    <div class="content">{message[0]}</div>
+  </div>)
+
     })
   }
 
@@ -110,13 +117,12 @@ class App extends Component {
     return (
       <div className="App">
 
-        <input type="text" onChange={this.changeHandler} value={this.state.msg} onClick={this.clearText}></input><button onClick={this.clickHandler}>Send</button>
+      <Scoreboard score={this.state.currentPoints}/>
+      {this.state.judge === this.state.myId ? <JudgePanel displayMsg={this.displayMsg()} allComments={this.state.allMsg}/> : <ContestantPanel onTypeChange={this.changeHandler} boxValue={this.state.msg} onClearClick={this.clearText} onSendClick={this.clickHandler} />}
+
          <Picture currentImage={this.state.currentImage}/>
         // <ImageHandler />
-        <ul>
-          {this.displayMsg()}
-        </ul>
-        <button onClick={initRoundEnd}>Next Round</button>
+
       </div>
     );
   }

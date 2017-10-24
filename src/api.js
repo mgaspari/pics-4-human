@@ -27,7 +27,7 @@ function sendMsg(msg){
 }
 
 function awardPoint(winnerId){
-  
+
 socket.emit('award-point', winnerId)
 }
 
@@ -39,8 +39,8 @@ function listenForPointUpdate(cb){
   socket.on('update-points', roundPoints => cb(roundPoints))
 }
 
-function initRoundEnd(){
-  socket.emit('round-end', "End Round")
+function initRoundEnd(cb){
+  socket.emit('round-end', cb)
 }
 
 function pictureManager(cb){
