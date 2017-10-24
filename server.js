@@ -63,13 +63,16 @@ io.on('connection', (client) => {
 
     client.on('award-point', (winnerId) =>{
       let winComment = ""
+      console.log(winnerId)
       roundComments.forEach((winnerArray) => {
+        console.log(winnerArray)
         if (winnerArray[1] === winnerId){
-          winComment = winnerArray
+          winComment = winnerArray[1]
         }
       })
+
       io.emit('announce-winner', winComment)
-      awardPoint(winComment[1])
+      awardPoint(winComment)
     })
 
     client.on('round-end',() => {

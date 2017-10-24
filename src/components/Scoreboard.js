@@ -5,8 +5,8 @@ export default class Scoreboard extends React.Component{
 getScore = () => {
   if(Object.entries(this.props.score).length > 0){
   return Object.keys(this.props.score).map((key) => {
-    return (<div><a class="item active">
-      <div class="ui teal label">{this.props.score[key]}</div>{key}</a>
+    return (<div><a className="item active">
+      <div className="ui teal label">{this.props.score[key]}</div>{key}</a>
     </div>)
   })
 }

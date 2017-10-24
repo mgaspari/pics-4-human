@@ -8,6 +8,7 @@ import ImageHandler from './components/ImageHandler'
 import Scoreboard from './components/Scoreboard'
 import ContestantPanel from './components/ContestantPanel'
 import JudgePanel from './components/JudgePanel'
+import WinnerModal from "./components/WinnerModal"
 // subscribeToTimer,
 class App extends Component {
   // constructor(props) {
@@ -22,7 +23,8 @@ class App extends Component {
     allMsg: [],
     currentImage: "",
     currentPoints: {},
-    judge: null
+    judge: null,
+    openModal: false
   };
 
 
@@ -54,13 +56,13 @@ class App extends Component {
   updatePoints = (currentPoints) =>{
     this.setState({
       currentPoints: currentPoints
-    }, () => console.log(this.state.currentPoints))
+    })
   }
 
   assignUsers = (allUsers) =>{
     this.setState({
       allUsers: allUsers
-    }, () => console.log(this.state.allUsers))
+    })
   }
 
   assignImage = (url) => {
@@ -89,19 +91,23 @@ class App extends Component {
     listenUp((msg) => {
       self.setState({
         allMsg: [...self.state.allMsg, [msg.body,msg.from]]
-      }, () => {console.log(self.state.allMsg)})
+      })
     })
   }
 
-  handleWinner = (event) => {
-    awardPoint(this.state.myId)
+  handleWinner = (id) => {
+    this.setState({
+      openModal: true
+    })
+    
+    awardPoint(id)
   }
 
   displayMsg = () => {
     return this.state.allMsg.map((message, index) =>{
-      return (<div role="listitem" key={index} class="item" onClick={this.handleWinner}>
-    <i aria-hidden="true" class="comment outline icon"></i>
-    <div class="content">{message[0]}</div>
+      return (<div role="listitem" key={index} className="item" onClick={this.handleWinner.bind(this, message[1])}>
+    <i aria-hidden="true" className="comment outline icon"></i>
+    <div className="content">{message[0]}</div>
   </div>)
 
     })
@@ -113,6 +119,14 @@ class App extends Component {
     })
   }
 
+  handleModal = () => {
+    this.setState({
+      openModal: false
+    })
+  }
+
+
+
   render() {
     return (
       <div className="App">
@@ -122,7 +136,7 @@ class App extends Component {
 
          <Picture currentImage={this.state.currentImage}/>
         // <ImageHandler />
-
+      <WinnerModal openModal={this.state.openModal} handleModal={this.handleModal}/>
       </div>
     );
   }
