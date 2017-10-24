@@ -39,8 +39,8 @@ function listenForPointUpdate(cb){
   socket.on('update-points', roundPoints => cb(roundPoints))
 }
 
-function initRoundEnd(cb){
-  socket.emit('round-end', cb)
+function initRoundEnd(){
+  socket.emit('round-end')
 }
 
 function pictureManager(cb){

@@ -24,7 +24,9 @@ class App extends Component {
     currentImage: "",
     currentPoints: {},
     judge: null,
-    openModal: false
+    openModal: false,
+    winnerId: "",
+    hasSubmitted: false
   };
 
 
@@ -39,7 +41,9 @@ class App extends Component {
   }
   roundStart = (message) =>{
     this.setState({
-      judge: message.judge
+      judge: message.judge,
+      winnerId: "",
+      hasSubmitted: false
     })
 
   }
@@ -50,7 +54,10 @@ class App extends Component {
   })
 }
   announceWinner = (winnerObject) =>{
-    console.log("hi")
+    this.setState({
+      openModal: true,
+      winnerId: winnerObject
+    })
   }
 
   updatePoints = (currentPoints) =>{
@@ -96,11 +103,10 @@ class App extends Component {
   }
 
   handleWinner = (id) => {
-    this.setState({
-      openModal: true
-    })
-    
-    awardPoint(id)
+    if(this.state.allMsg.length === 3){
+      awardPoint(id)
+    }
+
   }
 
   displayMsg = () => {
@@ -125,6 +131,12 @@ class App extends Component {
     })
   }
 
+  handleSubmission = () => {
+    this.setState({
+      hasSubmitted: true
+    })
+  }
+
 
 
   render() {
@@ -132,11 +144,11 @@ class App extends Component {
       <div className="App">
 
       <Scoreboard score={this.state.currentPoints}/>
-      {this.state.judge === this.state.myId ? <JudgePanel displayMsg={this.displayMsg()} allComments={this.state.allMsg}/> : <ContestantPanel onTypeChange={this.changeHandler} boxValue={this.state.msg} onClearClick={this.clearText} onSendClick={this.clickHandler} />}
+      {this.state.judge === this.state.myId ? <JudgePanel displayMsg={this.displayMsg()} winnerId={this.state.winnerId}/> : <ContestantPanel handleSubmission={this.handleSubmission} hasSubmitted={this.state.hasSubmitted} modalLogic={this.state.openModal} onTypeChange={this.changeHandler} boxValue={this.state.msg} onClearClick={this.clearText} onSendClick={this.clickHandler} />}
 
          <Picture currentImage={this.state.currentImage}/>
         // <ImageHandler />
-      <WinnerModal openModal={this.state.openModal} handleModal={this.handleModal}/>
+      <WinnerModal openModal={this.state.openModal} handleModal={this.handleModal} image_url={this.state.currentImage} allMsg={this.state.allMsg} winnerId={this.state.winnerId}/>
       </div>
     );
   }

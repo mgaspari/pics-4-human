@@ -7,7 +7,7 @@ export default class JudgePanel extends React.Component{
     return(
       <div>
       <Comments displayMsg={this.props.displayMsg} />
-      <NextRoundButton allComments={this.props.allComments} />
+      <NextRoundButton allComments={this.props.allComments} winnerId={this.props.winnerId} />
       </div>
     )
   }
