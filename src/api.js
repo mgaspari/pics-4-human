@@ -1,5 +1,5 @@
 import openSocket from 'socket.io-client';
-const  socket = openSocket('http://localhost:8000');
+const  socket = openSocket('http://192.168.3.211:8000');
 // What is happening her is that there is a funciton that is called that will get data and then emit back to the "subscribeToTimer" (not sure why the order is that way) Then it is calling a callback so that the funciton can digest the message from the server
 // function subscribeToTimer(cb) {
 //   socket.on('timer', timestamp => cb(null, timestamp));
@@ -56,4 +56,8 @@ function listenForPicUpdate(cb){
   socket.on('newPicture', imgUrl => cb(imgUrl))
 }
 
-export {  sendMsg, listenUp, listenForUsers, listenForRoundStart, listenForRoundWinner, initRoundEnd, pictureManager, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId };
+function listenForEndGame(cb){
+  socket.on('end-game', () => cb())
+}
+
+export {  sendMsg, listenUp, listenForUsers, listenForRoundStart, listenForRoundWinner, initRoundEnd, pictureManager, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId, listenForEndGame };

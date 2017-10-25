@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import {Route, Link} from "react-router-dom"
 import Picture from "./components/Picture"
-import {  sendMsg, listenUp, listenForUsers, listenForRoundStart,listenForRoundWinner, pictureManager, initRoundEnd, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId} from './api'
+import {  sendMsg, listenUp, listenForUsers, listenForRoundStart,listenForRoundWinner, pictureManager, initRoundEnd, listenForPicUpdate, listenForPointUpdate, awardPoint, assignMyId, listenForEndGame} from './api'
 import ImageHandler from './components/ImageHandler'
 import Scoreboard from './components/Scoreboard'
 import ContestantPanel from './components/ContestantPanel'
@@ -66,6 +66,10 @@ class App extends Component {
     })
   }
 
+  endGame = () =>{
+
+  }
+
   assignUsers = (allUsers) =>{
     this.setState({
       allUsers: allUsers
@@ -94,6 +98,7 @@ class App extends Component {
     listenForRoundStart(this.roundStart)
     listenForRoundWinner(this.announceWinner)
     listenForPointUpdate(this.updatePoints)
+    listenForEndGame(this.endGame)
     assignMyId(this.assignId)
     listenUp((msg) => {
       self.setState({
@@ -127,7 +132,8 @@ class App extends Component {
 
   handleModal = () => {
     this.setState({
-      openModal: false
+      openModal: false,
+      allMsg: []
     })
   }
 
@@ -147,7 +153,7 @@ class App extends Component {
       {this.state.judge === this.state.myId ? <JudgePanel displayMsg={this.displayMsg()} winnerId={this.state.winnerId}/> : <ContestantPanel handleSubmission={this.handleSubmission} hasSubmitted={this.state.hasSubmitted} modalLogic={this.state.openModal} onTypeChange={this.changeHandler} boxValue={this.state.msg} onClearClick={this.clearText} onSendClick={this.clickHandler} />}
 
          <Picture currentImage={this.state.currentImage}/>
-        // <ImageHandler />
+        
       <WinnerModal openModal={this.state.openModal} handleModal={this.handleModal} image_url={this.state.currentImage} allMsg={this.state.allMsg} winnerId={this.state.winnerId}/>
       </div>
     );

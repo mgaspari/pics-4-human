@@ -26,7 +26,7 @@ io.on('connection', (client) => {
   }
 
   function endGame(){
-
+    io.emit('end-game')
   }
 
   function awardPoint(winnerId){
